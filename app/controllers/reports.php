@@ -1,6 +1,6 @@
 <?php
 
-class Reports extends Controller
+class reports extends Controller
 {
     private function checkAdmin()
     {
