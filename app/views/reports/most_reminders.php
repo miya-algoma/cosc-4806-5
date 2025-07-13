@@ -1,4 +1,7 @@
-<?php require_once 'app/views/templates/header.php'; ?>
+<?php
+if (!isset($data)) $data = [];
+require_once 'app/views/templates/header.php';
+?>
 
 <div class="container mt-4">
 <h1>User with Most Reminders</h1>
@@ -11,5 +14,4 @@
 <div class="alert alert-warning">No reminder data found.</div>
 <?php endif; ?>
 </div>
-
 <?php require_once 'app/views/templates/footer.php'; ?>

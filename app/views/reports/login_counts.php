@@ -1,11 +1,10 @@
 <?php
-if (!isset($data)) $data = [];
+if (!isset($loginCounts)) $loginCounts = [];
 require_once 'app/views/templates/header.php';
 ?>
 
 <div class="container mt-4">
     <h1>Login Counts by Username</h1>
-
     <table class="table table-bordered mt-3">
         <thead>
             <tr>
@@ -14,11 +13,11 @@ require_once 'app/views/templates/header.php';
             </tr>
         </thead>
         <tbody>
-            <?php if (count($data) > 0): ?>
-                <?php foreach ($data as $entry): ?>
+            <?php if (count($loginCounts) > 0): ?>
+                <?php foreach ($loginCounts as $entry): ?>
                     <tr>
                         <td><?= htmlspecialchars($entry['username']) ?></td>
-                        <td><?= htmlspecialchars($entry['login_count']) ?></td>
+                        <td><?= htmlspecialchars($entry['total']) ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -27,5 +26,4 @@ require_once 'app/views/templates/header.php';
         </tbody>
     </table>
 </div>
-
 <?php require_once 'app/views/templates/footer.php'; ?>

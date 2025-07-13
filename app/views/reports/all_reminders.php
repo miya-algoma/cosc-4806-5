@@ -1,11 +1,9 @@
 <?php
-if (!isset($data)) $data = [];
+if (!isset($reminders)) $reminders = [];
 require_once 'app/views/templates/header.php';
 ?>
-
 <div class="container mt-4">
 <h1>All User Reminders</h1>
-
 <table class="table table-striped mt-3">
 <thead>
 <tr>
@@ -15,8 +13,8 @@ require_once 'app/views/templates/header.php';
 </tr>
 </thead>
 <tbody>
-<?php if (count($data) > 0): ?>
-<?php foreach ($data as $r): ?>
+<?php if (count($reminders) > 0): ?>
+<?php foreach ($reminders as $r): ?>
 <tr>
 <td><?= htmlspecialchars($r['username']) ?></td>
 <td><?= htmlspecialchars($r['subject']) ?></td>
@@ -29,5 +27,4 @@ require_once 'app/views/templates/header.php';
 </tbody>
 </table>
 </div>
-
 <?php require_once 'app/views/templates/footer.php'; ?>

@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/core/config.php';
+
 function db_connect() {
     try { 
         $dbh = new PDO(

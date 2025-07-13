@@ -20,7 +20,8 @@ body {
                 <p class="lead"><?= date("F jS, Y"); ?></p>
 
                 <!-- Display current user -->
-                <p><strong>Logged in as:</strong> <?= htmlspecialchars($_SESSION['username']) ?></p>
+                <p>Logged in as: <?= htmlspecialchars($_SESSION['auth']['username'] ?? '') ?></p>
+
             </div>
         </div>
 

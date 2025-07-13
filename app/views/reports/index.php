@@ -1,4 +1,3 @@
-
 <?php
 if (!isset($data)) $data = [];
 require_once 'app/views/templates/header.php';
@@ -6,7 +5,6 @@ require_once 'app/views/templates/header.php';
 
 <div class="container mt-4">
 <h1>Login Activity Report</h1>
-
 <table class="table table-bordered mt-3">
 <thead>
 <tr>

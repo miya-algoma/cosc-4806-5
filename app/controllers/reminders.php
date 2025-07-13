@@ -12,7 +12,8 @@ class Reminders extends Controller {
         }
 
         $model = $this->model('Reminder');
-        $reminders = $model->getAllByUser($_SESSION['user_id']);
+        $user_id = $_SESSION['auth']['user_id'] ?? null;
+        $reminders = $model->getAllByUser($user_id);
         $this->view('reminders/index', $reminders);
     }
 

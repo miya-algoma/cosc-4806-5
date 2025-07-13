@@ -12,8 +12,9 @@ class Home extends Controller
         }
 
         // Load reminders for the logged-in user
+        $user_id = $_SESSION['auth']['user_id'] ?? null;
         $model = $this->model('Reminder');
-        $reminders = $model->getAllByUser($_SESSION['user_id']);
+        $reminders = $model->getAllByUser($user_id);
 
         // Pass data to view
         $this->view('home/index', ['data' => $reminders]);
