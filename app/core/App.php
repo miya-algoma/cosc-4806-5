@@ -1,55 +1,51 @@
 <?php
 
-/**
- * Main application class for routing controllers and methods.
- */
-class App {
-    protected object|string $controller = 'login';
-    protected string $method = 'index';
-    protected array $params = [];
+class App
+{
+    protected $controller = 'login';   // Default controller
+    protected $method = 'index';       // Default method
+    protected $params = [];            // Parameters from URL
 
-    /**
-     * App constructor: starts session and handles routing.
-     */
-    public function __construct() {
+    public function __construct()
+    {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
         $url = $this->parseUrl();
 
-        // Set controller
-        if (isset($url[1]) && file_exists('app/controllers/' . $url[1] . '.php')) {
-            $this->controller = $url[1];
-            unset($url[1]);
-        } elseif (!isset($_SESSION['auth'])) {
-            $this->controller = 'login';
+        // Set controller if it exists
+        if (isset($url[0]) && file_exists(__DIR__ . '/../controllers/' . $url[0] . '.php')) {
+            require_once __DIR__ . '/../controllers/' . $url[0] . '.php';
+            $this->controller = $url[0];
+            unset($url[0]);
         } else {
-            $this->controller = 'home';
+            // fallback
+            $this->controller = isset($_SESSION['auth']) ? 'home' : 'login';
+            require_once __DIR__ . '/../controllers/' . $this->controller . '.php';
         }
 
-        require_once 'app/controllers/' . $this->controller . '.php';
-        $this->controller = new $this->controller;
+        // Capitalize controller class name to match class in file
+        $controllerClass = ucfirst($this->controller);
 
-        // Set method
-        if (isset($url[2]) && method_exists($this->controller, $url[2])) {
-            $this->method = $url[2];
-            unset($url[2]);
+        $this->controller = new $controllerClass;
+
+        // Set method if it exists
+        if (isset($url[1]) && method_exists($this->controller, $url[1])) {
+            $this->method = $url[1];
+            unset($url[1]);
         }
 
         $this->params = $url ? array_values($url) : [];
+
         call_user_func_array([$this->controller, $this->method], $this->params);
     }
 
-    /**
-     * Parses the current request URL into an array of route segments.
-     *
-     * @return array<int, string> Parsed URL segments
-     */
-    private function parseUrl(): array {
-        $u = $_SERVER['REQUEST_URI'] ?? '/';
-        $url = explode('/', filter_var(rtrim($u, '/'), FILTER_SANITIZE_URL));
-        unset($url[0]);
-        return array_values($url);
+    protected function parseUrl()
+    {
+        if (isset($_GET['url'])) {
+            return explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL));
+        }
+        return [];
     }
 }

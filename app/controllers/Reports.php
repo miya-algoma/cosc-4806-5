@@ -1,20 +1,21 @@
 <?php
 
-class Reports extends Controller {
-
-    /**
-     * Display login report from the log table.
-     *
-     * @return void
-     */
-    public function index(): void {
+class Reports extends Controller
+{
+    private function checkAdmin()
+    {
         if (session_status() === PHP_SESSION_NONE) session_start();
 
-        // Temporarily allow access for testing
-        // if (!isset($_SESSION['auth']) || strtolower($_SESSION['username']) !== 'admin') {
-        //     header('Location: /home');
-        //     exit;
-        // }
+        // Check for username admin (change if you use a different key)
+        if (!isset($_SESSION['auth']) || strtolower($_SESSION['auth']['username']) !== 'admin') {
+            header('Location: /home');
+            exit;
+        }
+    }
+
+    public function index(): void
+    {
+        $this->checkAdmin();
 
         $db = db_connect();
         $statement = $db->prepare("SELECT * FROM log ORDER BY timestamp DESC");
@@ -24,13 +25,9 @@ class Reports extends Controller {
         $this->view('reports/index', $rows);
     }
 
-    /**
-     * Show all reminders from all users.
-     *
-     * @return void
-     */
-    public function allReminders(): void {
-        if (session_status() === PHP_SESSION_NONE) session_start();
+    public function allReminders(): void
+    {
+        $this->checkAdmin();
 
         $db = db_connect();
         $stmt = $db->prepare("
@@ -45,13 +42,9 @@ class Reports extends Controller {
         $this->view('reports/all_reminders', ['reminders' => $reminders]);
     }
 
-    /**
-     * Display user with the most reminders.
-     *
-     * @return void
-     */
-    public function mostReminders(): void {
-        if (session_status() === PHP_SESSION_NONE) session_start();
+    public function mostReminders(): void
+    {
+        $this->checkAdmin();
 
         $db = db_connect();
         $stmt = $db->prepare("
@@ -68,25 +61,21 @@ class Reports extends Controller {
         $this->view('reports/most_reminders', $topUser);
     }
 
-    /**
-     * Show login attempt counts per user (only 'good' attempts).
-     *
-     * @return void
-     */
-    public function loginCounts(): void {
-        if (session_status() === PHP_SESSION_NONE) session_start();
+    public function loginCounts(): void
+    {
+        $this->checkAdmin();
 
         $db = db_connect();
         $stmt = $db->prepare("
-            SELECT username, COUNT(*) AS login_count
+            SELECT username, COUNT(*) AS total
             FROM log
-            WHERE attempt = 'good'
+            WHERE status = 'good'
             GROUP BY username
-            ORDER BY login_count DESC
+            ORDER BY total DESC
         ");
         $stmt->execute();
-        $counts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $loginCounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $this->view('reports/login_counts', $counts);
+        $this->view('reports/login_counts', ['loginCounts' => $loginCounts]);
     }
 }
