@@ -92,5 +92,8 @@ class User {
 
         $lastTime = strtotime($rows[0]['timestamp']);
         return (time() - $lastTime) < 60;
-    }
+        public function isAdmin() {
+            return isset($_SESSION['username']) && strtolower($_SESSION['username']) === 'admin';
+        }
+          }
 }

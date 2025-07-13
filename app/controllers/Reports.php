@@ -6,7 +6,7 @@ class Reports extends Controller {
         session_start();
 
         // Restrict to admin only
-        if (!isset($_SESSION['username']) || $_SESSION['username'] !== 'admin') {
+        if (!isset($_SESSION['auth']) || strtolower($_SESSION['username']) !== 'admin') {
             header('Location: /home');
             exit;
         }
